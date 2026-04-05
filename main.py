@@ -227,7 +227,7 @@ class PerfectCampusZquQuery(Star):
         try:
             self.check_inited()
 
-            text = await self.poller.text_builder.passive_room_list(self.poller.cached_rooms, self.poller.cached_time)
+            text = self.poller.text_builder.passive_room_list(self.poller.cached_rooms, self.poller.cached_time)
             yield event.plain_result(text)
         except Exception as e:
             yield event.plain_result(f'🚨 执行失败！请稍后重试。\n错误原因：{e}')
