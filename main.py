@@ -115,6 +115,7 @@ class PollerManager:
                 temp.append(i)
                 continue
 
+        logger.info('temp length: {}'.format(len(temp)))
         if len(temp) > 0:
             text = MessageChain().message(self.text_builder.active_room_limit_notify(temp))
             for i in self.config.get('umo_list'):
