@@ -248,7 +248,7 @@ class PerfectCampusZquQuery(Star):
             event.stop_event()
 
     @wmxy.command('reload')
-    async def force_update(self, event: AstrMessageEvent):
+    async def reload(self, event: AstrMessageEvent):
         try:
             self.check_inited()
 
