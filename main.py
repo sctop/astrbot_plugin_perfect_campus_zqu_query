@@ -148,7 +148,7 @@ class PollerManager:
 
     async def reload(self):
         async with self._shared_lock:
-            await self.terminate()
+            self._poller.cancel()
 
             self._poller = asyncio.create_task(self.poller_main())
             self._poller_last_run: Tuple[List[RoomResult], int] = ([], 0)
