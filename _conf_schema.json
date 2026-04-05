@@ -1,10 +1,10 @@
 {
-  "api_token": {
+  "school_id": {
     "description": "学校ID",
     "hint": "参见 https://github.com/zuwei522/perfect-campus_electricity-alert/blob/main/school-list.md",
     "type": "string"
   },
-  "account_id": {
+  "student_id": {
     "description": "学生学号",
     "hint": "即你的完美校园账号绑定的学校学号",
     "type": "string"
