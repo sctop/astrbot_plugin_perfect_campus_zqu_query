@@ -268,7 +268,7 @@ class PerfectCampusZquQuery(Star):
         finally:
             event.stop_event()
 
-    @filter.regex(r'查电费|查水电|宿舍|查水费')
+    @filter.regex(r'^查电费$|^查水电$|^宿舍$|^查水费$')
     async def chinese_quick_list_regex(self, event: AstrMessageEvent):
         try:
             self.check_inited()
