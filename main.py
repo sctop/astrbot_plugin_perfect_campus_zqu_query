@@ -183,7 +183,7 @@ class PerfectCampusZquQuery(Star):
             logger.error('请先正确设置插件的学校ID和学号！')
             return
 
-        self.poller = PollerManager(school_id, student_id)
+        self.poller = PollerManager(school_id, student_id, self.config, self.send_message_callback)
         await self.poller.init()
 
         self._is_inited = True
