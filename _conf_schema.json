@@ -1,0 +1,34 @@
+{
+  "api_token": {
+    "description": "学校ID",
+    "hint": "参见 https://github.com/zuwei522/perfect-campus_electricity-alert/blob/main/school-list.md",
+    "type": "string"
+  },
+  "account_id": {
+    "description": "学生学号",
+    "hint": "即你的完美校园账号绑定的学校学号",
+    "type": "string"
+  },
+  "limit_electricity": {
+    "description": "电费警告阈值",
+    "hint": "当电费小于或等于该值时，即发送警告信息",
+    "type": "float",
+    "default": 10.0
+  },
+  "limit_water": {
+    "description": "水费警告阈值",
+    "hint": "当水费小于或等于该值时，即发送警告信息",
+    "type": "float",
+    "default": 1.0
+  },
+  "polling_time": {
+    "description": "轮询的等待时间",
+    "hint": "以秒计，建议设置为一个小时以上",
+    "type": "int",
+    "default": 3600
+  },
+  "umo_list": {
+    "description": "需要启用该插件功能的聊天UMO",
+    "type": "list"
+  }
+}
