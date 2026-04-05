@@ -234,6 +234,7 @@ class PerfectCampusZquQuery(Star):
         finally:
             event.stop_event()
 
+    @filter.permission_type(filter.PermissionType.ADMIN)
     @wmxy.command('force_update')
     async def force_update(self, event: AstrMessageEvent):
         try:
@@ -247,6 +248,7 @@ class PerfectCampusZquQuery(Star):
         finally:
             event.stop_event()
 
+    @filter.permission_type(filter.PermissionType.ADMIN)
     @wmxy.command('reload')
     async def reload(self, event: AstrMessageEvent):
         try:
