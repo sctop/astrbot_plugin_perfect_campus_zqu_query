@@ -52,7 +52,7 @@ class PollerTextBuilder:
             text += f'      {temp[1]}\n'
 
         text += f'\n🚧电费阈值: {self.limit_electricity}度\n🚧水费阈值: {self.limit_water}吨\n'
-        text += f'当前时间: {self.get_current_time()}'
+        text += f'🕙当前时间: {self.get_current_time()}'
 
         return text
 
@@ -70,7 +70,7 @@ class PollerTextBuilder:
         text += f'📦缓存更新时间: {TimeUtils.get_datetime_strftime_in_tz(
             datetime.datetime.fromtimestamp(data_time), "Asia/Taipei"
         )}\n'
-        text += f'当前时间: {self.get_current_time()}'
+        text += f'🕙当前时间: {self.get_current_time()}'
 
         return text
 
