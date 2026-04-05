@@ -227,6 +227,10 @@ class PerfectCampusZquQuery(Star):
         try:
             self.check_inited()
 
+            if event.unified_msg_origin not in self.config.get('umo_list'):
+                event.stop_event()
+                return
+
             text = self.poller.text_builder.passive_room_list(self.poller.cached_rooms, self.poller.cached_time)
             yield event.plain_result(text)
         except Exception as e:
