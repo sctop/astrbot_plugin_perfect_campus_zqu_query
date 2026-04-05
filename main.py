@@ -115,9 +115,10 @@ class PollerManager:
                 temp.append(i)
                 continue
 
-        text = MessageChain().message(self.text_builder.active_room_limit_notify(temp))
-        for i in self.config.get('umo_list'):
-            self.send_func(i, text)
+        if len(temp) > 0:
+            text = MessageChain().message(self.text_builder.active_room_limit_notify(temp))
+            for i in self.config.get('umo_list'):
+                self.send_func(i, text)
 
     async def poller_main(self):
         try:
