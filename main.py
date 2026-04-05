@@ -37,12 +37,12 @@ class PollerTextBuilder:
     def _get_room_electricity_and_water_text(self, room: RoomResult):
         electricity_odd, water_odd = get_electricity_and_water_value(room)
         return [
-            f'⚡电费: {electricity_odd}度 {"✅" if electricity_odd > self.limit_electricity else "⚠️"}',
-            f'💧水费: {water_odd}吨 {"✅" if water_odd > self.limit_water else "⚠️"}'
+            f'⚡ 电费: {electricity_odd}度 {"✅" if electricity_odd > self.limit_electricity else "⚠️"}',
+            f'💧 水费: {water_odd}吨 {"✅" if water_odd > self.limit_water else "⚠️"}'
         ]
 
     def active_room_limit_notify(self, rooms: List[RoomResult]):
-        text = '⚠️监测到有房间的电费/水费不足！\n\n'
+        text = '⚠️ 监测到有房间的电费/水费不足！\n\n'
 
         for i in rooms:
             text += f'🏠 {i.roomfullname}\n'
@@ -51,13 +51,13 @@ class PollerTextBuilder:
             text += f'      {temp[0]}\n'
             text += f'      {temp[1]}\n'
 
-        text += f'\n🚧电费阈值: {self.limit_electricity}度\n🚧水费阈值: {self.limit_water}吨\n'
-        text += f'🕙当前时间: {self.get_current_time()}'
+        text += f'\n🚧 电费阈值: {self.limit_electricity}度\n🚧 水费阈值: {self.limit_water}吨\n'
+        text += f'🕙 当前时间: {self.get_current_time()}'
 
         return text
 
     def passive_room_list(self, rooms: List[RoomResult], data_time: float):
-        text = '🔍您账号下绑定的所有房间信息\n\n'
+        text = '🔍 您账号下绑定的所有房间信息\n\n'
 
         for i in rooms:
             text += f'🏠 {i.roomfullname}\n'
@@ -66,11 +66,11 @@ class PollerTextBuilder:
             text += f'      {temp[0]}\n'
             text += f'      {temp[1]}\n'
 
-        text += f'\n🚧电费阈值: {self.limit_electricity}度\n🚧水费阈值: {self.limit_water}吨\n'
-        text += f'📦缓存更新时间: {TimeUtils.get_datetime_strftime_in_tz(
+        text += f'\n🚧 电费阈值: {self.limit_electricity}度\n🚧 水费阈值: {self.limit_water}吨\n'
+        text += f'📦 缓存更新时间: {TimeUtils.get_datetime_strftime_in_tz(
             datetime.datetime.fromtimestamp(data_time), "Asia/Taipei"
         )}\n'
-        text += f'🕙当前时间: {self.get_current_time()}'
+        text += f'🕙 当前时间: {self.get_current_time()}'
 
         return text
 
