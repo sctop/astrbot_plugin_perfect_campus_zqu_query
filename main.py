@@ -139,7 +139,7 @@ class PollerManager:
     async def add_umo(self, umo: str):
         async with self._shared_lock:
             if umo not in self.config.get('umo_list'):
-                self.config['umo_list'] = self.config.get('umo_list') + [umo]
+                self.config['umo_list'].append(umo)
 
     async def remove_umo(self, umo: str):
         async with self._shared_lock:
