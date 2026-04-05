@@ -224,8 +224,8 @@ class PerfectCampusZquQuery(Star):
         finally:
             event.stop_event()
 
-    @wmxy.command('check', alias={'list'})
-    async def check(self, event: AstrMessageEvent):
+    @wmxy.command('list', alias={'check'})
+    async def list(self, event: AstrMessageEvent):
         try:
             self.check_inited()
 
@@ -263,6 +263,22 @@ class PerfectCampusZquQuery(Star):
             yield event.plain_result(f'⏳ 正尝试重载插件主要 asyncio Task')
             await self.poller.reload()
             yield event.plain_result(f'✅ 已强制重载插件主要 asyncio Task')
+        except Exception as e:
+            yield event.plain_result(f'🚨 执行失败！请稍后重试。\n错误原因：{e}')
+        finally:
+            event.stop_event()
+
+    @filter.regex(r'查电费|查水电|宿舍|查水费')
+    async def chinese_quick_list_regex(self, event: AstrMessageEvent):
+        try:
+            self.check_inited()
+
+            if event.unified_msg_origin not in self.config.get('umo_list'):
+                event.stop_event()
+                return
+
+            text = self.poller.text_builder.passive_room_list(self.poller.cached_rooms, self.poller.cached_time)
+            yield event.plain_result(text)
         except Exception as e:
             yield event.plain_result(f'🚨 执行失败！请稍后重试。\n错误原因：{e}')
         finally:
