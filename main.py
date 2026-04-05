@@ -9,8 +9,8 @@ from astrbot.api.star import Context, Star, register
 from astrbot.api import logger, AstrBotConfig
 from astrbot.core.message.message_event_result import MessageChain
 
-from utils import TimeUtils
-from wmxy_client import WanxiaoClient, RoomResult
+from .utils import TimeUtils
+from .wmxy_client import WanxiaoClient, RoomResult
 
 
 def get_electricity_and_water_value(room: RoomResult) -> list[float]:
