@@ -106,7 +106,7 @@ class PollerManager:
             self._cron_autonotify.start(self.poller_auto_notify, catch_up=True)
         )
 
-    async def poller_auto_notify(self):
+    async def poller_auto_notify(self, scheduled_time=None):
         while True:
             try:
                 async with self._shared_lock:
