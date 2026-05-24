@@ -47,7 +47,7 @@ class WanxiaoClient:
             "method": "getbindroom"
         }
 
-        async with self.session.post(self.BASE_URL, data=payload) as resp:
+        async with self.session.post(self.BASE_URL, data=payload, timeout=10) as resp:
             data = await resp.json()
 
         body_raw = data.get("body", "{}")

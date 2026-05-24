@@ -122,19 +122,24 @@ class PollerManager:
                 await self.send_func(i, text)
 
     async def poller_main(self):
-        try:
-            while True:
-                try:
-                    async with self._shared_lock:
-                        await self.poller_sender()
-                except Exception as e:
-                    logger.erorr(f'发生错误，等待 10 秒后重试：{e}')
-                    await asyncio.sleep(10)
-                    continue
+        while True:
+            try:
+                while True:
+                    try:
+                        async with self._shared_lock:
+                            await self.poller_sender()
+                    except Exception as e:
+                        logger.erorr(f'发生错误，等待 10 秒后重试：{e}')
+                        await asyncio.sleep(10)
+                        continue
 
-                await asyncio.sleep(self.config.get('polling_time', 10))
-        except asyncio.CancelledError:
-            pass
+                    await asyncio.sleep(self.config.get('polling_time', 10))
+            except asyncio.CancelledError:
+                logger.warn(f"WMXY main poller cancelled")
+                raise
+            except Exception as e:
+                logger.critical(f'WMXY poller unexpectedly exit: {e}. Waiting 10s to restart.')
+                await asyncio.sleep(10)
 
     async def add_umo(self, umo: str):
         async with self._shared_lock:
