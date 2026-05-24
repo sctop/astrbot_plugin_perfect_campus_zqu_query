@@ -228,7 +228,7 @@ class PerfectCampusZquQuery(Star):
             logger.error('请先正确设置插件的学校ID和学号！')
             return
         if self.config.get('fixed_notify_cron_on', False):
-            if fixed_notify_cron != '' and check_valid_cron_expression(fixed_notify_cron):
+            if fixed_notify_cron != '' and not check_valid_cron_expression(fixed_notify_cron):
                 logger.error('Cron 表达式不正确！')
                 return
         else:
