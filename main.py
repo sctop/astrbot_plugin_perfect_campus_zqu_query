@@ -135,7 +135,7 @@ class PollerManager:
                     break
 
                 # 没有更新，那就推送！
-                text = self.text_builder.passive_room_list(self.cached_rooms, self.cached_time)
+                text = MessageChain().message(self.text_builder.active_room_auto_notify(self.cached_rooms, self.cached_time))
                 for i in self.config.get('umo_list'):
                     await self.send_func(i, text)
 
