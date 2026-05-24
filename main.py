@@ -75,6 +75,25 @@ class PollerTextBuilder:
 
         return text
 
+    def active_room_auto_notify(self, rooms: List[RoomResult], data_time: float):
+        text = '⏰ 定时推送房间信息\n\n'
+
+        for i in rooms:
+            text += f'🏠 {i.roomfullname}\n'
+
+            temp = self._get_room_electricity_and_water_text(i)
+            text += f'      {temp[0]}\n'
+            text += f'      {temp[1]}\n'
+
+        text += f'\n🚧 电费阈值: {self.limit_electricity}度\n🚧 水费阈值: {self.limit_water}吨\n'
+        text += f'📦 缓存更新时间: {TimeUtils.get_datetime_strftime_in_tz(
+            datetime.datetime.fromtimestamp(data_time), "Asia/Taipei"
+        )}\n'
+        text += f'🕙 当前时间: {self.get_current_time()}'
+
+        return text
+
+
 
 class PollerManager:
     def __init__(self, school_id: str, student_id: str, config: AstrBotConfig,
@@ -109,8 +128,17 @@ class PollerManager:
     async def poller_auto_notify(self, scheduled_time=None):
         while True:
             try:
-                async with self._shared_lock:
-                    await self.poller_sender()
+                # 先强制更新一下
+                force_update = await self.poller_sender()
+                # >0 说明已经更新了
+                if force_update > 0:
+                    break
+
+                # 没有更新，那就推送！
+                text = self.text_builder.passive_room_list(self.cached_rooms, self.cached_time)
+                for i in self.config.get('umo_list'):
+                    await self.send_func(i, text)
+
                 break
             except Exception as e:
                 logger.erorr(f'发生错误，等待 3 秒后重试：{e}')
@@ -136,6 +164,8 @@ class PollerManager:
             text = MessageChain().message(self.text_builder.active_room_limit_notify(temp))
             for i in self.config.get('umo_list'):
                 await self.send_func(i, text)
+            return len(temp)
+        return 0 # no updates
 
     async def poller_main(self):
         while True:
