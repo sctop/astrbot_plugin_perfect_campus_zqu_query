@@ -101,7 +101,7 @@ class PollerManager:
         self._shared_lock = asyncio.Lock()
         self._poller = asyncio.create_task(self.poller_main())
         self._poller_last_run: Tuple[List[RoomResult], int] = ([], 0)
-        self._cron_autonotify = CronScheduler(self.config.get('fixed_notify_cron'))
+        self._cron_autonotify = CronScheduler(self.config.get('fixed_notify_cron'), ZoneInfo('Asia/Taipei'))
         self._poller_autonotify = asyncio.create_task(
             self._cron_autonotify.start(self.poller_auto_notify, catch_up=True)
         )
@@ -178,7 +178,7 @@ class PollerManager:
             self._poller = asyncio.create_task(self.poller_main())
             self._poller_last_run: Tuple[List[RoomResult], int] = ([], 0)
             self._poller_autonotify = asyncio.create_task(
-                self._cron_autonotify.start(self.poller_auto_notify, catch_up=True)
+                self._cron_autonotify.start(self.poller_auto_notify, True)
             )
 
     async def force_update(self):
