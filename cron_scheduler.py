@@ -105,6 +105,7 @@ class CronScheduler:
                         # Execute the job
                         await self._run_job(job_func, next_run, *args, **kwargs)
                         last_run = next_run
+                        break
                     except asyncio.CancelledError:
                         raise
                     except Exception as e:
@@ -121,20 +122,3 @@ class CronScheduler:
         self._running = False
         if self._task:
             self._task.cancel()
-
-
-async def main():
-    # Create scheduler - runs every 10 seconds
-    scheduler = CronScheduler("*/10 * * * * *")  # Every 10 seconds
-
-    # Start the scheduler with catch-up enabled
-    scheduler_task = asyncio.create_task(
-        scheduler.start(my_job, catch_up=True, message="Hello!")
-    )
-
-    # Run for 60 seconds
-    await asyncio.sleep(60)
-
-    # Stop the scheduler
-    scheduler.stop()
-    await scheduler_task
