@@ -27,6 +27,11 @@
     "type": "int",
     "default": 3600
   },
+  "fixed_notify_cron_on": {
+    "description": "开始定时推送",
+    "type": "bool",
+    "default": false
+  },
   "fixed_notify_cron": {
     "description": "固定推送Cron",
     "hint": "固定提醒/推送当前水电情况到所有聊天的Cron表达式",

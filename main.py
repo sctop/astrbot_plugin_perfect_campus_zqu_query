@@ -213,9 +213,12 @@ class PerfectCampusZquQuery(Star):
         if school_id == '' or student_id == '':
             logger.error('请先正确设置插件的学校ID和学号！')
             return
-        if fixed_notify_cron != '' and check_valid_cron_expression(fixed_notify_cron):
-            logger.error('Cron 表达式不正确！')
-            return
+        if self.config.get('fixed_notify_cron_on', False):
+            if fixed_notify_cron != '' and check_valid_cron_expression(fixed_notify_cron):
+                logger.error('Cron 表达式不正确！')
+                return
+        else:
+            logger.info('已关闭定时推送功能')
 
         self.poller = PollerManager(school_id, student_id, self.config, self.send_message_callback)
         await self.poller.init()
