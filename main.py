@@ -186,10 +186,22 @@ class PollerManager:
             await self.poller_sender()
 
     async def terminate(self):
-        await self.client.destroy()
-        self._poller.cancel()
-        self._cron_autonotify.stop()
-        self._poller_autonotify.cancel()
+        try:
+            await self.client.destroy()
+        except Exception as e:
+            pass
+        try:
+            self._poller.cancel()
+        except Exception as e:
+            pass
+        try:
+            self._cron_autonotify.stop()
+        except Exception as e:
+            pass
+        try:
+            self._poller_autonotify.cancel()
+        except Exception as e:
+            pass
 
     @property
     def cached_rooms(self) -> List[RoomResult]:
