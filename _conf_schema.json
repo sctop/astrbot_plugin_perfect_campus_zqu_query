@@ -27,6 +27,12 @@
     "type": "int",
     "default": 3600
   },
+  "fixed_notify_cron": {
+    "description": "固定推送Cron",
+    "hint": "固定提醒/推送当前水电情况到所有聊天的Cron表达式",
+    "type": "string",
+    "default": "0 */8 * * *"
+  },
   "umo_list": {
     "description": "需要启用该插件功能的聊天UMO",
     "type": "list"

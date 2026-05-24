@@ -9,8 +9,9 @@ from astrbot.api.star import Context, Star, register
 from astrbot.api import logger, AstrBotConfig
 from astrbot.core.message.message_event_result import MessageChain
 
-from .utils import TimeUtils
+from .utils import TimeUtils, check_valid_cron_expression
 from .wmxy_client import WanxiaoClient, RoomResult
+from .cron_scheduler import CronScheduler
 
 
 def get_electricity_and_water_value(room: RoomResult) -> list[float]:
@@ -100,6 +101,20 @@ class PollerManager:
         self._shared_lock = asyncio.Lock()
         self._poller = asyncio.create_task(self.poller_main())
         self._poller_last_run: Tuple[List[RoomResult], int] = ([], 0)
+        self._cron_autonotify = CronScheduler(self.config.get('fixed_notify_cron'))
+        self._poller_autonotify = asyncio.create_task(
+            self._cron_autonotify.start(self.poller_auto_notify, catch_up=True)
+        )
+
+    async def poller_auto_notify(self):
+        while True:
+            try:
+                async with self._shared_lock:
+                    await self.poller_sender()
+            except Exception as e:
+                logger.erorr(f'发生错误，等待 10 秒后重试：{e}')
+                await asyncio.sleep(10)
+                continue
 
     async def poller_sender(self):
         result = await self.client.get_rooms()
@@ -115,7 +130,7 @@ class PollerManager:
                 temp.append(i)
                 continue
 
-        logger.info('temp length: {}'.format(len(temp)))
+        logger.debug('temp length: {}'.format(len(temp)))
         if len(temp) > 0:
             text = MessageChain().message(self.text_builder.active_room_limit_notify(temp))
             for i in self.config.get('umo_list'):
@@ -123,8 +138,10 @@ class PollerManager:
 
     async def poller_main(self):
         while True:
+            # 外层 while 循环，使得其能够自动重启
             try:
                 while True:
+                    # 内层 while 循环
                     try:
                         async with self._shared_lock:
                             await self.poller_sender()
@@ -154,9 +171,13 @@ class PollerManager:
     async def reload(self):
         async with self._shared_lock:
             self._poller.cancel()
+            self._poller_autonotify.cancel()
 
             self._poller = asyncio.create_task(self.poller_main())
             self._poller_last_run: Tuple[List[RoomResult], int] = ([], 0)
+            self._poller_autonotify = asyncio.create_task(
+                self._cron_autonotify.start(self.poller_auto_notify, catch_up=True)
+            )
 
     async def force_update(self):
         async with self._shared_lock:
@@ -165,6 +186,8 @@ class PollerManager:
     async def terminate(self):
         await self.client.destroy()
         self._poller.cancel()
+        self._cron_autonotify.stop()
+        self._poller_autonotify.cancel()
 
     @property
     def cached_rooms(self) -> List[RoomResult]:
@@ -184,10 +207,14 @@ class PerfectCampusZquQuery(Star):
 
     async def initialize(self):
         """可选择实现异步的插件初始化方法，当实例化该插件类之后会自动调用该方法。"""
-        school_id = self.config.get('school_id')
-        student_id = self.config.get('student_id')
+        school_id = self.config.get('school_id', '')
+        student_id = self.config.get('student_id', '')
+        fixed_notify_cron = self.config.get('fixed_notify_cron', '')
         if school_id == '' or student_id == '':
             logger.error('请先正确设置插件的学校ID和学号！')
+            return
+        if fixed_notify_cron != '' and check_valid_cron_expression(fixed_notify_cron):
+            logger.error('Cron 表达式不正确！')
             return
 
         self.poller = PollerManager(school_id, student_id, self.config, self.send_message_callback)
