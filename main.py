@@ -111,9 +111,10 @@ class PollerManager:
             try:
                 async with self._shared_lock:
                     await self.poller_sender()
+                break
             except Exception as e:
-                logger.erorr(f'发生错误，等待 10 秒后重试：{e}')
-                await asyncio.sleep(10)
+                logger.erorr(f'发生错误，等待 3 秒后重试：{e}')
+                await asyncio.sleep(3)
                 continue
 
     async def poller_sender(self):
