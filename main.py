@@ -141,7 +141,7 @@ class PollerManager:
 
                 break
             except Exception as e:
-                logger.erorr(f'发生错误，等待 3 秒后重试：{e}')
+                logger.error(f'发生错误，等待 3 秒后重试：{e}')
                 await asyncio.sleep(3)
                 continue
 
@@ -177,7 +177,7 @@ class PollerManager:
                         async with self._shared_lock:
                             await self.poller_sender()
                     except Exception as e:
-                        logger.erorr(f'发生错误，等待 10 秒后重试：{e}')
+                        logger.error(f'发生错误，等待 10 秒后重试：{e}')
                         await asyncio.sleep(10)
                         continue
 
