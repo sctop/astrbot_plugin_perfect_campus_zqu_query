@@ -19,13 +19,13 @@ class RoomResultDetailListEntry(pydantic.BaseModel):
 
 class RoomResult(pydantic.BaseModel):
     detaillist: List[RoomResultDetailListEntry]
-    existflag: str | None
-    isshowsubsidy: str | None
-    message: str | None # "操作成功"
-    result: str | None
+    existflag: str | None = None
+    isshowsubsidy: str | None = None
+    message: str | None = None # "操作成功"
+    result: str | None = None
     roomfullname: str
     roomverify: str
-    ver: int | None
+    ver: int | None = None
 
 
 class WanxiaoClient:
