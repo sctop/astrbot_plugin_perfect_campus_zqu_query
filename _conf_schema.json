@@ -41,5 +41,10 @@
   "umo_list": {
     "description": "需要启用该插件功能的聊天UMO",
     "type": "list"
+  },
+  "monitor_whitelist": {
+    "description": "需要告警的房间ID白名单",
+    "hint": "留空时对绑定账号下的所有房间进行告警；仅填写需要告警的房间ID(roomverify)或房间名(roomfullname)，两者任一匹配即告警",
+    "type": "list"
   }
 }

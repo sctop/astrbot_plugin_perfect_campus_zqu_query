@@ -114,6 +114,17 @@ class PollerManager:
         if not self._is_inited:
             raise RuntimeError('请先正确初始化插件')
 
+    def _room_matches_whitelist(self, room: RoomResult) -> bool:
+        """判断该房间是否需要进行告警。
+
+        当 monitor_whitelist 为空时，默认对绑定的所有房间告警；
+        非空时，仅当房间的 roomverify(房间ID) 或 roomfullname(房间名) 命中列表时才告警。
+        """
+        whitelist = self.config.get('monitor_whitelist') or []
+        if not whitelist:
+            return True
+        return room.roomverify in whitelist or room.roomfullname in whitelist
+
     async def init(self):
         self._is_inited = True
 
@@ -151,6 +162,8 @@ class PollerManager:
 
         temp = []
         for i in result:
+            if not self._room_matches_whitelist(i):
+                continue
             temp2 = get_electricity_and_water_value(i)
             if temp2[0] <= self.limit_electricity:
                 temp.append(i)
